@@ -1,0 +1,40 @@
+---
+
+- name: Ensure auditd package is installed
+  package:
+    name: "{{ auditd_package }}"
+    state: present
+    update_cache: yes
+  register: auditd_package_result
+
+- name: Enforce auditd rules
+  synchronize: 
+    src: "{{ role_auditd_rules_dir }}"
+    dest: "{{ auditd_rules_dir }}"
+    delete: yes
+  notify:
+    - Restart auditd
+ 
+- name: Enforce auditd conf - RHEL7
+  template:
+    src: "{{ role_auditd_rhel7_auditd_conf }}"
+    dest: "{{ auditd_conf_path }}"
+  when: 
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '7'
+  notify:
+    - Restart auditd
+
+- name: Enforce auditd conf - RHEL8
+  template:
+    src: "{{ role_auditd_rhel8_auditd_conf }}"
+    dest: "{{ auditd_conf_path }}"
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '8'
+  notify:
+    - Restart auditd
+  
+- name: Attach Laurel to Auditd
+  import_tasks: laurel.yml
+

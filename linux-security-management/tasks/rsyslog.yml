@@ -1,0 +1,10 @@
+---
+ 
+- name: Enforce rsyslog conf
+  template:
+    src: rsyslog/rsyslog.conf.j2
+    dest: "{{ rsyslog_conf_path }}"
+    validate: rsyslogd -N1 -f %s
+  notify:
+    - Restart rsyslog
+

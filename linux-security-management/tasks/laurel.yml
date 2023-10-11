@@ -1,0 +1,55 @@
+---
+
+- name: Enforce auditd plugins - RHEL7
+  synchronize: 
+    src: "{{ role_auditd_plugins_dir }}"
+    dest: "{{ auditd_rhel7_plugins_dir }}"
+    delete: yes
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '7'
+  notify: 
+    - Restart auditd
+
+- name: Enforce auditd plugins - RHEL8
+  synchronize:
+    src: "{{ role_auditd_plugins_dir }}"
+    dest: "{{ auditd_rhel8_plugins_dir }}"
+    delete: yes
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version == '8'
+  notify: 
+    - Restart auditd
+
+- name: Unarchive laurel binary
+  unarchive:
+    src: "{{role_path}}/{{ role_laurel_binary_archive_path }}"
+    dest: "{{ laurel_binary_dir }}"
+    mode: '0755'
+    exclude: README.md,performance.md,INSTALL.md,man
+    creates: "{{ laurel_binary_path }}"
+
+- name: Create laurel user
+  user:
+    name: "{{ laurel_user }}"
+    home: "{{ laurel_home_dir }}"
+    shell: "{{ laurel_shell }}"
+    comment: "User for Laurel auditd plugin" 
+    system: yes
+
+- name: Create /etc/laurel directory
+  file:
+    path: "{{ laurel_config_dir }}"
+    state: directory
+    mode: '0755'
+    
+- name: Enforce laurel configuration
+  template:
+    src: "{{ role_laurel_config_path }}"
+    dest: "{{ laurel_config_path }}"
+    mode: '0640'
+  notify:
+    - Restart auditd
+
+

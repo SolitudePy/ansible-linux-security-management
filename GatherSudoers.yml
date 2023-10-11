@@ -1,0 +1,37 @@
+---
+- name: Gather sudoers rules
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Get sudoers rules from main file
+      command: grep -E '^[^#].*' /etc/sudoers
+      register: main_sudoers_content
+      ignore_errors: yes
+
+    - name: Get sudoers rules from sudoers.d
+      command: find /etc/sudoers.d -type f -exec grep -E '^[^#].*' {} \;
+      register: sudoers_d_content
+      ignore_errors: yes
+
+    - name: Combine sudoers rules
+      set_fact:
+        sudoers_rules_combined: "{{ main_sudoers_content.stdout_lines + sudoers_d_content.stdout_lines }}"
+
+    - name: create json
+      set_fact: 
+        json_list: "{{ json_list | default([]) + [{'rule': item}] }}"
+      with_items: "{{ sudoers_rules_combined }}"
+
+    - name: print
+      debug:
+        var: json_list
+
+    - name: Save JSON to a file
+      copy:
+        content: "{{ json_list | to_json(indent=2) }}"  # Convert JSON to a pretty-printed format
+        dest: /tmp/output.json  # Specify the file path on the target host
+      delegate_to: localhost  # Perform the task on the Ansible control machine
+
+    - name: Display saved file path
+      debug:
+        var: ansible_host  # Display the file path where the JSON file was saved

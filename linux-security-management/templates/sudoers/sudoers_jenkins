@@ -1,0 +1,3 @@
+# Allow the Jenkins user to run specific Jenkins commands as root with a password prompt
+jenkins ALL=(ALL:ALL) /usr/bin/systemctl start jenkins, /usr/bin/systemctl stop jenkins
+

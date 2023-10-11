@@ -1,0 +1,3 @@
+# Allow the Splunk user to run specific Splunk commands as root without a password prompt
+splunk ALL=(root) /opt/splunk/bin/splunk start, /opt/splunk/bin/splunk stop
+

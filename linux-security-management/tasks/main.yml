@@ -1,0 +1,15 @@
+---
+# Main file for linux-security-management role
+
+- name: Import auditd and laurel
+  import_tasks: auditd.yml
+  when: auditd_laurel_choice | bool
+
+- name: Import rsyslog
+  import_tasks: rsyslog.yml
+  when: rsyslog_choice | bool
+ 
+- name: Import sudoers
+  import_tasks: sudoers.yml
+  when: sudoers_choice | bool
+

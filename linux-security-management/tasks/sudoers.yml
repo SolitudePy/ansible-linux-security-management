@@ -1,0 +1,34 @@
+- name: Synchronize sudoers
+  copy:
+    src: "{{ role_dir }}/templates/sudoers/{{ item.src }}"
+    dest: "/etc/sudoers.d/{{ item.src }}"
+    mode: 0440
+    validate: /usr/sbin/visudo -cf %s
+  with_items:
+    - { src: "sudoers_common"}
+    - { src: "sudoers_splunk", host_group: "splunk_servers" }
+    - { src: "sudoers_jenkins", host_group: "jenkins_servers" }
+    - { src: "sudoers_linux" }
+  when: item.host_group is not defined or inventory_hostname in groups[item.host_group]
+  register: synchronize_result
+
+- name: Synchronize /etc/sudoers
+  copy:
+    src: "{{ role_dir }}/templates/sudoers/sudoers"
+    dest: "/etc/sudoers"
+    mode: 0440
+    validate: /usr/sbin/visudo -cf %s
+
+- name: Find all files in sudoers.d directory
+  find:
+    paths: /etc/sudoers.d
+    file_type: file
+  register: sudoers_files
+
+- name: Delete all files that were not copied
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ sudoers_files.files }}"
+  when: "(item.path | basename) not in (synchronize_result.results | reject('skipped') | map(attribute='item.src') | list)"
+

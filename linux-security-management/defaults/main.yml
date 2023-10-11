@@ -1,0 +1,39 @@
+---
+
+# Global
+role_dir: /etc/ansible/roles/linux-security-management
+
+# Auditd variables
+
+## Static
+auditd_package: audit
+auditd_rhel7_plugins_dir: /etc/audisp
+auditd_rhel8_plugins_dir: /etc/audit
+auditd_rules_dir: /etc/audit
+auditd_conf_path: /etc/audit/auditd.conf
+## Self defined
+role_auditd_rules_dir: templates/auditd/rules.d
+role_auditd_plugins_dir: templates/auditd/plugins.d
+role_auditd_rhel7_auditd_conf: auditd/auditd_rhel7/auditd.conf
+role_auditd_rhel8_auditd_conf: auditd/auditd_rhel8/auditd.conf
+
+
+# Laurel variables
+
+## Static
+laurel_user: '_laurel'
+laurel_home_dir: /var/log/laurel
+laurel_shell: /bin/nologin
+laurel_config_dir: /etc/laurel
+laurel_config_path: /etc/laurel/config.toml
+laurel_binary_path: /usr/local/sbin/laurel
+laurel_binary_dir: /usr/local/sbin
+## Self defined
+role_laurel_config_path: laurel/config.toml
+role_laurel_binary_archive_path: files/laurel/laurel-v0.5.3-x86_64-glibc.tar.gz
+
+# Rsyslog variables
+
+## Static
+rsyslog_conf_path: /etc/rsyslog.conf
+## Self defined

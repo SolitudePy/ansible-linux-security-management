@@ -1,0 +1,3 @@
+# Allow user1 to run any command as root without a password prompt
+user1 ALL=(ALL:ALL) NOPASSWD: ALL
+

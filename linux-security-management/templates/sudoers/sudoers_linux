@@ -1,0 +1,3 @@
+# Allow all users to run a specific script as root without a password prompt
+ALL ALL=(ALL:ALL) /usr/local/bin/my_script.sh
+
