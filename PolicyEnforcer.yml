@@ -1,0 +1,8 @@
+- name: Policy Enforcer
+  hosts: 192.168.206.132
+  gather_facts: true
+  ignore_errors: true
+  tasks:
+    - name: Include Linux Security Management Role
+      include_role: 
+        name: linux-security-management
