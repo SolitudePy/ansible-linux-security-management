@@ -9,14 +9,14 @@ Role Variables
 Variables are well defined in defaults/main.yml.
 
 parameters:
-auditd_laurel_choice [true/false]
-rsyslog_choice [true/false]
-sudoers_choice [true/false]
+* auditd_laurel_choice [true/false]
+* rsyslog_choice [true/false]
+* sudoers_choice [true/false]
 
 
 Example Playbook
 ----------------
-
+```yml
 - name: Policy Enforcer
   hosts: servers
   gather_facts: true
@@ -25,8 +25,8 @@ Example Playbook
     - name: Include Linux Security Management Role
       include_role:
         name: linux-security-management
-
-run command: ansible-playbook <playbook_path> -e "auditd_laurel_choice=false" -e "rsyslog_choice=true" -e "sudoers_choice=true"
+```
+run command: `ansible-playbook <playbook_path> -e "auditd_laurel_choice=false" -e "rsyslog_choice=true" -e "sudoers_choice=true"`
 
 License
 -------
