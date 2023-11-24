@@ -1,6 +1,6 @@
-- name: Synchronize sudoers
+- name: Copy required /etc/sudoers.d files
   copy:
-    src: "{{ role_dir }}/templates/sudoers/{{ item.src }}"
+    src: "sudoers/sudoers.d/{{ item.src }}"
     dest: "/etc/sudoers.d/{{ item.src }}"
     mode: 0440
     validate: /usr/sbin/visudo -cf %s
@@ -12,9 +12,9 @@
   when: item.host_group is not defined or inventory_hostname in groups[item.host_group]
   register: synchronize_result
 
-- name: Synchronize /etc/sudoers
+- name: Copy /etc/sudoers
   copy:
-    src: "{{ role_dir }}/templates/sudoers/sudoers"
+    src: "sudoers/sudoers"
     dest: "/etc/sudoers"
     mode: 0440
     validate: /usr/sbin/visudo -cf %s
